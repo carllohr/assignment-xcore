@@ -16,6 +16,6 @@ namespace assignmentxcore_classlibrary.Models.BaseModels
         public string Description { get; set; } = null!;
         public int ContentTypeId { get; set; }
         public DateTime DateCreated { get; set; }
-        public DateTime DateUpdated { get; set; }
+        public DateTime? DateUpdated { get; set; }
     }
 }

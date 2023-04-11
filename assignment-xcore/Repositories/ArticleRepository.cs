@@ -46,6 +46,17 @@ namespace assignment_xcore.Repositories
             catch (Exception ex) { return null!;}
         }
 
+        public async Task<bool> DeleteAsync(ArticleEntity entity)
+        {
+            try
+            {
+                _context.Articles.Remove(entity);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex) { return false; }
+        }
+
         public async Task<IEnumerable<ArticleEntity>> GetAllAsync()
         {
             try
@@ -53,6 +64,7 @@ namespace assignment_xcore.Repositories
                 return await _context.Articles
                     .Include(x => x.ArticleAuthors).
                     ThenInclude(xx => xx.Author)
+                    .Include(x => x.ContentType)
                     .Include(x => x.ArticleTags)
                     .ThenInclude(xx => xx.Tag).ToListAsync();
             }
@@ -104,6 +116,17 @@ namespace assignment_xcore.Repositories
                     .Collection(ae => ae.ArticleTags)
                     .Query()
                     .Include(at => at.Tag)
+                    .LoadAsync();
+                return true;
+            }
+            catch (Exception ex) { return false; }
+        }
+        public async Task<bool> LoadContentType(ArticleEntity entity)
+        {
+            try
+            {
+                await _context.Entry(entity)
+                    .Reference(ae => ae.ContentType)
                     .LoadAsync();
                 return true;
             }

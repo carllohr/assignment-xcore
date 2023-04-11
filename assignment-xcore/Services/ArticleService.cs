@@ -32,10 +32,29 @@ namespace assignment_xcore.Services
             return resList;
         }
 
+        public async Task<IEnumerable<ArticleResponse>> SortByContentType()
+        {
+            var list = await _articleRepo.GetAllAsync();
+            list.OrderByDescending(x => x.ContentType.ContentTypeName);
+            var resList = ArticleFactory.CreateArticleResponseList();
+            foreach(var item in list)
+            {
+                resList.Add(item);
+            }
+            return resList.OrderByDescending(x => x.ContentType.ContentTypeName);
+            
+        }
+
         public async Task<ArticleResponse> GetByIdAsync(int id)
         {
             var res = await _articleRepo.GetAsync(id);
             return res;
+        }
+        
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var entity = await _articleRepo.GetAsync(id);
+            return await _articleRepo.DeleteAsync(entity);
         }
 
         public async Task<ArticleResponse> UpdateAsync(int id, ArticleRequest req)
@@ -79,6 +98,7 @@ namespace assignment_xcore.Services
                 }
                 await _articleRepo.LoadAuthors(entity);
                 await _articleRepo.LoadTags(entity);
+                await _articleRepo.LoadContentType(entity);
                 ArticleResponse res = await _articleRepo.GetAsync(entity.Id);
                 return res;
 

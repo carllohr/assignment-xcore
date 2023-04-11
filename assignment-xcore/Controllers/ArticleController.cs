@@ -27,6 +27,11 @@ namespace assignment_xcore.Controllers
         {
             return await _articleService.GetAll();
         }
+        [HttpGet("sorted")]
+        public async Task<IEnumerable<ArticleResponse>> ReadSorted()
+        {
+            return await _articleService.SortByContentType();
+        }
 
         [HttpGet("{id}")]
         public async Task<ArticleResponse> Read(int id)
@@ -39,13 +44,28 @@ namespace assignment_xcore.Controllers
                 
         }
         [HttpPut("{id}")]
-        public async Task<ArticleResponse>Update(int id, ArticleRequest req)
+        public async Task<ArticleResponse> Update(int id, ArticleRequest req)
         {
             if (req != null) 
             {
                 return await _articleService.UpdateAsync(id, req);
             }
             return null!;
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (id != 0)
+            {
+                var result = await _articleService.DeleteAsync(id);
+                if (result)
+                {
+                    return Ok();
+                }
+                return BadRequest();
+            }
+            return BadRequest();
         }
     }
 }

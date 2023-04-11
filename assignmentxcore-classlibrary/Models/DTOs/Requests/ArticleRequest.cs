@@ -18,7 +18,7 @@ namespace assignmentxcore_classlibrary.Models.DTOs.Requests
         public string Description { get; set; } = null!;
         public int ContentTypeId { get; set; }
         public DateTime DateCreated { get; set; } = DateTime.Now;
-        public DateTime DateUpdated { get; set; } 
+        public DateTime? DateUpdated { get; set; } 
 
         public static implicit operator ArticleEntity(ArticleRequest req)
         {
