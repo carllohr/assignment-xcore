@@ -14,6 +14,7 @@ namespace assignmentxcore_classlibrary.Models.Entities
     {
         public ICollection<ArticleAuthorEntity> ArticleAuthors { get; set; } = null!;
         public ICollection<ArticleTagEntity> ArticleTags { get; set; } = null!;
+        public ContentTypeEntity ContentType { get; set; } = null!;
         
         public static implicit operator ArticleResponse(ArticleEntity entity)
         {
@@ -23,6 +24,23 @@ namespace assignmentxcore_classlibrary.Models.Entities
             res.Description= entity.Description;
             res.DateCreated = entity.DateCreated;
             res.DateUpdated = entity.DateUpdated;
+            res.Authors = entity.ArticleAuthors.Select(aa => aa.Author).Select(author =>
+            {
+                var authorresponse = AuthorFactory.CreateAuthorResponse();
+                authorresponse.FirstName = author.FirstName;
+                authorresponse.LastName = author.LastName;
+                authorresponse.Email = author.Email;
+                return authorresponse;
+            }).ToList();
+            res.Tags = entity.ArticleTags.Select(x => x.Tag).Select(tag =>
+            {
+                var tagResponse = TagFactory.CreateTagResponse();
+                tagResponse.Id = tag.Id;
+                tagResponse.TagName = tag.TagName;
+                return tagResponse;
+            }).ToList();
+            res.ContentType = entity.ContentType;
+            res.ContentTypeId = entity.ContentTypeId;
             return res;
         }
     }

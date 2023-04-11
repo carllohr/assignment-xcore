@@ -6,28 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace assignment_xcore.Migrations
 {
     /// <inheritdoc />
-    public partial class newdbInit : Migration
+    public partial class New : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Articles",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ContentTypeId = table.Column<int>(type: "int", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Articles", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Authors",
                 columns: table => new
@@ -67,6 +50,29 @@ namespace assignment_xcore.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tags", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Articles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ContentTypeId = table.Column<int>(type: "int", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Articles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Articles_ContentTypes_ContentTypeId",
+                        column: x => x.ContentTypeId,
+                        principalTable: "ContentTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -123,6 +129,11 @@ namespace assignment_xcore.Migrations
                 column: "AuthorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Articles_ContentTypeId",
+                table: "Articles",
+                column: "ContentTypeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ArticleTags_TagId",
                 table: "ArticleTags",
                 column: "TagId");
@@ -138,9 +149,6 @@ namespace assignment_xcore.Migrations
                 name: "ArticleTags");
 
             migrationBuilder.DropTable(
-                name: "ContentTypes");
-
-            migrationBuilder.DropTable(
                 name: "Authors");
 
             migrationBuilder.DropTable(
@@ -148,6 +156,9 @@ namespace assignment_xcore.Migrations
 
             migrationBuilder.DropTable(
                 name: "Tags");
+
+            migrationBuilder.DropTable(
+                name: "ContentTypes");
         }
     }
 }

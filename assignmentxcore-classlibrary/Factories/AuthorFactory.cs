@@ -1,4 +1,5 @@
-﻿using assignmentxcore_classlibrary.Models.Entities;
+﻿using assignmentxcore_classlibrary.Models.DTOs.Responses;
+using assignmentxcore_classlibrary.Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,10 @@ namespace assignmentxcore_classlibrary.Factories
         public static AuthorEntity CreateAuthorEntity()
         {
             return new AuthorEntity();
+        }
+        public static AuthorResponse CreateAuthorResponse()
+        {
+            return new AuthorResponse();
         }
     }
 }

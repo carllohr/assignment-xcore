@@ -64,6 +64,8 @@ namespace assignment_xcore.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ContentTypeId");
+
                     b.ToTable("Articles");
                 });
 
@@ -158,6 +160,17 @@ namespace assignment_xcore.Migrations
                     b.Navigation("Article");
 
                     b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("assignmentxcore_classlibrary.Models.Entities.ArticleEntity", b =>
+                {
+                    b.HasOne("assignmentxcore_classlibrary.Models.Entities.ContentTypeEntity", "ContentType")
+                        .WithMany()
+                        .HasForeignKey("ContentTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ContentType");
                 });
 
             modelBuilder.Entity("assignmentxcore_classlibrary.Models.Entities.ArticleTagEntity", b =>

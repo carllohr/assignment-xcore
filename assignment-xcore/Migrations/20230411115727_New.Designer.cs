@@ -12,8 +12,8 @@ using assignment_xcore.Contexts;
 namespace assignment_xcore.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230410171848_newdbInit")]
-    partial class newdbInit
+    [Migration("20230411115727_New")]
+    partial class New
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -66,6 +66,8 @@ namespace assignment_xcore.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ContentTypeId");
 
                     b.ToTable("Articles");
                 });
@@ -161,6 +163,17 @@ namespace assignment_xcore.Migrations
                     b.Navigation("Article");
 
                     b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("assignmentxcore_classlibrary.Models.Entities.ArticleEntity", b =>
+                {
+                    b.HasOne("assignmentxcore_classlibrary.Models.Entities.ContentTypeEntity", "ContentType")
+                        .WithMany()
+                        .HasForeignKey("ContentTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ContentType");
                 });
 
             modelBuilder.Entity("assignmentxcore_classlibrary.Models.Entities.ArticleTagEntity", b =>

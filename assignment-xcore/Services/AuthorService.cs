@@ -1,5 +1,6 @@
 ﻿using assignment_xcore.Repositories;
 using assignmentxcore_classlibrary.Models.DTOs.Requests;
+using assignmentxcore_classlibrary.Models.DTOs.Responses;
 using assignmentxcore_classlibrary.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,6 +32,12 @@ namespace assignment_xcore.Services
         public async Task<IEnumerable<AuthorResponse>> GetAll()
         {
             var list = await _authorRepo.GetAll();
+            var resList = new List<AuthorResponse>();
+            foreach(var author in list)
+            {
+                resList.Add(author);
+            }
+            return resList;
         }
     }
 }

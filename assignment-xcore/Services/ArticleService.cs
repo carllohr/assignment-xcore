@@ -25,12 +25,14 @@ namespace assignment_xcore.Services
         {
             var list = await _articleRepo.GetAll();
             var resList = new List<ArticleResponse>();
-            
-
+            foreach(var item in list)
+            {
+                resList.Add(item);
+            }
             return resList;
         }
 
-        public async Task<IActionResult> CreateArticle(ArticleRequest req)
+        public async Task<ArticleResponse> CreateArticle(ArticleRequest req)
         {
             try
             {
@@ -48,13 +50,15 @@ namespace assignment_xcore.Services
                     var tagRow = ArticleTagFactory.CreateArticleTagEntity(entity.Id, tagId);
                     await _articleTagRepo.CreateAsync(tagRow);
                 }
-
-                return new OkResult();
+                await _articleRepo.LoadAuthors(entity);
+                await _articleRepo.LoadTags(entity);
+                ArticleResponse res = await _articleRepo.Get(entity.Id);
+                return res;
 
             }
             catch (Exception ex)
             {
-                return new BadRequestResult();
+                return null!;
             }
         }
 

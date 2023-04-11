@@ -28,13 +28,54 @@ namespace assignment_xcore.Repositories
             
         }
 
+        public async Task<ArticleEntity> Get(int id)
+        {
+            try
+            {
+                var entity = await _context.Articles.FirstOrDefaultAsync(x => x.Id == id);
+                return entity!;
+            }
+            catch (Exception ex) { return null!;}
+        }
+
         public async Task<IEnumerable<ArticleEntity>> GetAll()
         {
             try
             {
-                return await _context.Articles.ToListAsync();
+                return await _context.Articles
+                    .Include(x => x.ArticleAuthors).
+                    ThenInclude(xx => xx.Author)
+                    .Include(x => x.ArticleTags)
+                    .ThenInclude(xx => xx.Tag).ToListAsync();
             }
             catch (Exception ex) { return null!;}
+        }
+        public async Task<bool> LoadAuthors(ArticleEntity entity)
+        {
+            try
+            {
+                await _context.Entry(entity)
+                    .Collection(ae => ae.ArticleAuthors)
+                    .Query()
+                    .Include(aa => aa.Author)
+                    .LoadAsync();
+                return true;
+            }
+            catch (Exception ex) { return false; }
+        }
+
+        public async Task<bool> LoadTags(ArticleEntity entity)
+        {
+            try
+            {
+                await _context.Entry(entity)
+                    .Collection(ae => ae.ArticleTags)
+                    .Query()
+                    .Include(at => at.Tag)
+                    .LoadAsync();
+                return true;
+            }
+            catch (Exception ex) { return false; }
         }
     }
 }

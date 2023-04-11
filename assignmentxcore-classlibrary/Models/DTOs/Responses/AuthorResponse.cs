@@ -11,6 +11,6 @@ namespace assignmentxcore_classlibrary.Models.DTOs.Responses
 {
     public class AuthorResponse : Author
     {
-        public ICollection<ArticleEntity> articleEntities { get; set; }
+        public ICollection<string> Articles { get; set; } = null!;
     }
 }
