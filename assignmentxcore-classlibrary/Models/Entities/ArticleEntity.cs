@@ -27,6 +27,7 @@ namespace assignmentxcore_classlibrary.Models.Entities
             res.Authors = entity.ArticleAuthors.Select(aa => aa.Author).Select(author =>
             {
                 var authorresponse = AuthorFactory.CreateAuthorResponse();
+                authorresponse.Id = author.Id;
                 authorresponse.FirstName = author.FirstName;
                 authorresponse.LastName = author.LastName;
                 authorresponse.Email = author.Email;

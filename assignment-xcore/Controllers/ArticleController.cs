@@ -27,5 +27,25 @@ namespace assignment_xcore.Controllers
         {
             return await _articleService.GetAll();
         }
+
+        [HttpGet("{id}")]
+        public async Task<ArticleResponse> Read(int id)
+        {
+            if (id != 0)
+            {
+                return await _articleService.GetByIdAsync(id);
+            }
+            return null!;
+                
+        }
+        [HttpPut("{id}")]
+        public async Task<ArticleResponse>Update(int id, ArticleRequest req)
+        {
+            if (req != null) 
+            {
+                return await _articleService.UpdateAsync(id, req);
+            }
+            return null!;
+        }
     }
 }

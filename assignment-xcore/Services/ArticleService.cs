@@ -23,13 +23,40 @@ namespace assignment_xcore.Services
 
         public async Task<IEnumerable<ArticleResponse>> GetAll()
         {
-            var list = await _articleRepo.GetAll();
-            var resList = new List<ArticleResponse>();
+            var list = await _articleRepo.GetAllAsync();
+            var resList = ArticleFactory.CreateArticleResponseList();
             foreach(var item in list)
             {
                 resList.Add(item);
             }
             return resList;
+        }
+
+        public async Task<ArticleResponse> GetByIdAsync(int id)
+        {
+            var res = await _articleRepo.GetAsync(id);
+            return res;
+        }
+
+        public async Task<ArticleResponse> UpdateAsync(int id, ArticleRequest req)
+        {
+            var entity = await _articleRepo.Update(id, req);
+            foreach(var authorId in req.AuthorIds) 
+            {
+                var articleRow = ArticleAuthorFactory.Create(entity.Id, authorId);
+                await _articleAuthorRepo.CreateAsync(articleRow);
+            }
+            foreach(var tagId in req.TagIds)
+            {
+                var tagRow = ArticleTagFactory.CreateArticleTagEntity(entity.Id, tagId);
+                await _articleTagRepo.CreateAsync(tagRow);
+            }
+            await _articleRepo.LoadAuthors(entity);
+            await _articleRepo.LoadTags(entity);
+
+            ArticleResponse res = entity;
+            return res;
+
         }
 
         public async Task<ArticleResponse> CreateArticle(ArticleRequest req)
@@ -52,7 +79,7 @@ namespace assignment_xcore.Services
                 }
                 await _articleRepo.LoadAuthors(entity);
                 await _articleRepo.LoadTags(entity);
-                ArticleResponse res = await _articleRepo.Get(entity.Id);
+                ArticleResponse res = await _articleRepo.GetAsync(entity.Id);
                 return res;
 
             }

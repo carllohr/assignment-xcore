@@ -28,17 +28,25 @@ namespace assignment_xcore.Repositories
             
         }
 
-        public async Task<ArticleEntity> Get(int id)
+        public async Task<ArticleEntity> GetAsync(int id)
         {
             try
             {
-                var entity = await _context.Articles.FirstOrDefaultAsync(x => x.Id == id);
+                
+                var entity = await _context.Articles
+                    .Include(x => x.ContentType)
+                    .Include(x => x.ArticleAuthors)
+                    .ThenInclude(x => x.Author)
+                    .Include(x => x.ArticleTags)
+                    .ThenInclude(x => x.Tag)
+                    .FirstOrDefaultAsync(x => x.Id == id);
+                
                 return entity!;
             }
             catch (Exception ex) { return null!;}
         }
 
-        public async Task<IEnumerable<ArticleEntity>> GetAll()
+        public async Task<IEnumerable<ArticleEntity>> GetAllAsync()
         {
             try
             {
@@ -49,6 +57,30 @@ namespace assignment_xcore.Repositories
                     .ThenInclude(xx => xx.Tag).ToListAsync();
             }
             catch (Exception ex) { return null!;}
+        }
+        public async Task<ArticleEntity> Update(int id, ArticleRequest req)
+        {
+            try
+            {
+                var entity = await _context.Articles.Include(x => x.ContentType)
+                    .Include(x => x.ArticleAuthors).ThenInclude(xx => xx.Author)
+                    .Include(x => x.ArticleTags).ThenInclude(xx => xx.Tag)
+                    .FirstOrDefaultAsync(x => x.Id == id);
+                entity!.ArticleAuthors.Clear();
+                entity!.ArticleTags.Clear();
+                entity!.Title = req.Title;
+                entity!.DateUpdated= req.DateUpdated = DateTime.Now;
+                entity!.Description = req.Description;
+                entity!.ContentTypeId = req.ContentTypeId;
+                _context.Articles.Update(entity);
+                await _context.SaveChangesAsync();
+                return entity;
+            } 
+            catch(Exception ex) 
+            { return null!; }
+            
+             
+
         }
         public async Task<bool> LoadAuthors(ArticleEntity entity)
         {

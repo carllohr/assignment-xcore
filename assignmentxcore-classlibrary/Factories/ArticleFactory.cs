@@ -23,5 +23,17 @@ namespace assignmentxcore_classlibrary.Factories
         {
             return new ArticleResponse();
         }
+
+        public static List<ArticleResponse> CreateArticleResponseList()
+        {
+            return new List<ArticleResponse>();
+        }
+        public static ArticleEntity UpdateArticleEntity(ArticleEntity articleEntity, ArticleRequest articleRequest)
+        {
+            articleEntity.Title = articleRequest.Title;
+            articleEntity.Description = articleRequest.Description;
+            articleEntity.ContentTypeId = articleRequest.ContentTypeId;
+            return articleEntity;
+        }
     }
 }
