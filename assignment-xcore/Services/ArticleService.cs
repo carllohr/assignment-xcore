@@ -4,6 +4,7 @@ using assignmentxcore_classlibrary.Models.DTOs.Requests;
 using assignmentxcore_classlibrary.Models.DTOs.Responses;
 using assignmentxcore_classlibrary.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Reflection;
 
 namespace assignment_xcore.Services
@@ -32,17 +33,36 @@ namespace assignment_xcore.Services
             return resList;
         }
 
-        public async Task<IEnumerable<ArticleResponse>> SortByContentType()
+        public async Task<IEnumerable<ArticleResponse>> SortByContentType(int id)
         {
             var list = await _articleRepo.GetAllAsync();
-            list.OrderByDescending(x => x.ContentType.ContentTypeName);
             var resList = ArticleFactory.CreateArticleResponseList();
             foreach(var item in list)
             {
                 resList.Add(item);
             }
-            return resList.OrderByDescending(x => x.ContentType.ContentTypeName);
-            
+            return resList.Where(x => x.ContentTypeId == id);
+        }
+
+        public async Task<IEnumerable<ArticleResponse>> SortByInput(string sortBy)
+        {
+            var list = await _articleRepo.GetAllAsync();
+            var resList = ArticleFactory.CreateArticleResponseList();
+            foreach (var item in list)
+            {
+                resList.Add(item);
+            }
+            switch(sortBy)
+            {
+                case "Title":
+                    return resList.OrderBy(x => x.Title);
+                case "Date":
+                    return resList.OrderBy(x => x.DateCreated);
+                case "ContentType":
+                    return resList.OrderBy(x => x.ContentTypeId);
+                default:
+                    return resList.OrderBy(x => x.Id);
+            }
         }
 
         public async Task<ArticleResponse> GetByIdAsync(int id)

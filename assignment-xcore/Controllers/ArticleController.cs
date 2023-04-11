@@ -28,9 +28,14 @@ namespace assignment_xcore.Controllers
             return await _articleService.GetAll();
         }
         [HttpGet("sorted")]
-        public async Task<IEnumerable<ArticleResponse>> ReadSorted()
+        public async Task<IEnumerable<ArticleResponse>> ReadSortedByContentType(int id)
         {
-            return await _articleService.SortByContentType();
+            return await _articleService.SortByContentType(id);
+        }
+        [HttpGet("sort-by-input")]
+        public async Task<IEnumerable<ArticleResponse>> ReadSortedByInput(string sortBy)
+        {
+            return await _articleService.SortByInput(sortBy);
         }
 
         [HttpGet("{id}")]
