@@ -51,7 +51,7 @@ namespace assignment_xcore.Migrations
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DateUpdated")
+                    b.Property<DateTime?>("DateUpdated")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
@@ -152,7 +152,7 @@ namespace assignment_xcore.Migrations
                         .IsRequired();
 
                     b.HasOne("assignmentxcore_classlibrary.Models.Entities.AuthorEntity", "Author")
-                        .WithMany()
+                        .WithMany("ArticleAuthor")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -197,6 +197,11 @@ namespace assignment_xcore.Migrations
                     b.Navigation("ArticleAuthors");
 
                     b.Navigation("ArticleTags");
+                });
+
+            modelBuilder.Entity("assignmentxcore_classlibrary.Models.Entities.AuthorEntity", b =>
+                {
+                    b.Navigation("ArticleAuthor");
                 });
 #pragma warning restore 612, 618
         }

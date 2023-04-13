@@ -12,6 +12,7 @@ namespace assignmentxcore_classlibrary.Models.Entities
 {
     public class AuthorEntity : Author
     {
+        public ICollection<ArticleAuthorEntity>? ArticleAuthor { get; set; }
 
         public static implicit operator AuthorResponse(AuthorEntity entity)
         {

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace assignment_xcore.Migrations
 {
     /// <inheritdoc />
-    public partial class New : Migration
+    public partial class NewUpdatedDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -62,7 +62,7 @@ namespace assignment_xcore.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ContentTypeId = table.Column<int>(type: "int", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
