@@ -21,4 +21,8 @@
     <ProjectReference Include="..\assignmentxcore-classlibrary\ClassLibrary.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

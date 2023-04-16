@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace assignment_xcore.Migrations
 {
     /// <inheritdoc />
-    public partial class NewUpdatedDb : Migration
+    public partial class Ok : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

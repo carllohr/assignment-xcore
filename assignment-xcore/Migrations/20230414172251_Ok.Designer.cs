@@ -12,8 +12,8 @@ using assignment_xcore.Contexts;
 namespace assignment_xcore.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230413152950_NewUpdatedDb")]
-    partial class NewUpdatedDb
+    [Migration("20230414172251_Ok")]
+    partial class Ok
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

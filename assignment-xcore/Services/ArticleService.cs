@@ -14,12 +14,14 @@ namespace assignment_xcore.Services
         private readonly ArticleRepository _articleRepo;
         private readonly ArticleAuthorRepository _articleAuthorRepo;
         private readonly ArticleTagRepository _articleTagRepo;
+        private readonly ArticleRowService _articleRowService;
 
-        public ArticleService(ArticleRepository articleRepo, ArticleAuthorRepository articleAuthorRepo, ArticleTagRepository articleTagRepo)
+        public ArticleService(ArticleRepository articleRepo, ArticleAuthorRepository articleAuthorRepo, ArticleTagRepository articleTagRepo, ArticleRowService articleRowService)
         {
             _articleRepo = articleRepo;
             _articleAuthorRepo = articleAuthorRepo;
             _articleTagRepo = articleTagRepo;
+            _articleRowService = articleRowService;
         }
 
         public async Task<IEnumerable<ArticleResponse>> GetAll()
@@ -80,20 +82,8 @@ namespace assignment_xcore.Services
         public async Task<ArticleResponse> UpdateAsync(int id, ArticleRequest req)
         {
             var entity = await _articleRepo.Update(id, req);
-            foreach(var authorId in req.AuthorIds) 
-            {
-                var articleRow = ArticleAuthorFactory.Create(entity.Id, authorId);
-                await _articleAuthorRepo.CreateAsync(articleRow);
-            }
-            foreach(var tagId in req.TagIds)
-            {
-                var tagRow = ArticleTagFactory.CreateArticleTagEntity(entity.Id, tagId);
-                await _articleTagRepo.CreateAsync(tagRow);
-            }
-            await _articleRepo.LoadAuthors(entity);
-            await _articleRepo.LoadTags(entity);
-
-            ArticleResponse res = entity;
+            await _articleRowService.CreateArticleRows(entity, req);
+            ArticleResponse res = await _articleRepo.GetAsync(entity.Id);
             return res;
 
         }
@@ -102,26 +92,10 @@ namespace assignment_xcore.Services
         {
             try
             {
-
                 ArticleEntity entity = await _articleRepo.Create(req);
-
-                foreach (var id in req.AuthorIds)
-                {
-                    var articleRow = ArticleAuthorFactory.Create(entity.Id, id);
-                    await _articleAuthorRepo.CreateAsync(articleRow);
-                }
-
-                foreach (var tagId in req.TagIds)
-                {
-                    var tagRow = ArticleTagFactory.CreateArticleTagEntity(entity.Id, tagId);
-                    await _articleTagRepo.CreateAsync(tagRow);
-                }
-                await _articleRepo.LoadAuthors(entity);
-                await _articleRepo.LoadTags(entity);
-                await _articleRepo.LoadContentType(entity);
+                await _articleRowService.CreateArticleRows(entity, req);
                 ArticleResponse res = await _articleRepo.GetAsync(entity.Id);
                 return res;
-
             }
             catch (Exception ex)
             {

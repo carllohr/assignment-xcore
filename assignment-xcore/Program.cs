@@ -15,6 +15,7 @@ builder.Services.AddScoped<TagRepository>();
 builder.Services.AddScoped<ArticleTagRepository>();
 builder.Services.AddScoped<ContentTypeRepository>();
 builder.Services.AddScoped<ContentTypeService>();
+builder.Services.AddScoped<ArticleRowService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
